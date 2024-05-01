@@ -1,3 +1,4 @@
+from os import environ
 from typing import List
 import setuptools
 
@@ -15,8 +16,12 @@ with open("README.md", "r") as fh:
 
 requirements = read_multiline_as_list("requirements.txt")
 
+
+version = environ["POSITIONAL_VECTORIZER_VERSION"]
+
 setuptools.setup(
     name="positional-vectorizer",
+    version=version,
     author="Tiago Albineli Motta",
     author_email="timotta@gmail.com",
     description="Positional Vectorizer is a scikit-learn transformer that converts text to bag of words vector using a positional ranking algorithm as score",
@@ -26,7 +31,6 @@ setuptools.setup(
     packages=setuptools.find_packages(
         include=["positional_vectorizer", "positional_vectorizer.*"]
     ),
-    use_scm_version=True,
     license="new BSD",
     include_package_data=True,
     keywords="machine learning, embedding, vectorizer, scikit-learn, text, NLP",

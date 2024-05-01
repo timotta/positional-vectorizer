@@ -33,8 +33,18 @@ jobs:
       run: make lint
     - name: Test
       run: make test
+    - name: Get tag or commit id
+      id: version
+      uses: iawia002/get-tag-or-commit-id@v1
+      with:
+        length: 7
+    - name: Build
+      run: |
+        pip install build
+        python -m build -s
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
         user: __token__
         password: ${{ secrets.PYPI_API_TOKEN }}
+
