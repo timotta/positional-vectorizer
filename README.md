@@ -42,8 +42,8 @@ Text embeddings based on bag-of-words using count, binary, or TF-IDF normalizati
 
 For instance, consider the importance of word position in a Portuguese classification task distinguishing between a smartphone device and a smartphone accessory. In traditional bag-of-words approaches with stop words removed, the following titles yield identical representations:
 
-"xiaomi com fone de ouvido" => {"xiaomi", "fone", "ouvido"}
-"fone de ouvido do xiaomi" => {"xiaomi", "fone", "ouvido"}
+* "xiaomi com fone de ouvido" => {"xiaomi", "fone", "ouvido"}
+* "fone de ouvido do xiaomi" => {"xiaomi", "fone", "ouvido"}
 
 As demonstrated, the order of words significantly alters the meaning, but this meaning is not reflected in the vectorization.
 
