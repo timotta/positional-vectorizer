@@ -31,6 +31,7 @@ setuptools.setup(
     packages=setuptools.find_packages(
         include=["positional_vectorizer", "positional_vectorizer.*"]
     ),
+    license="new BSD",
     include_package_data=True,
     keywords="machine learning, embedding, vectorizer, scikit-learn, text, NLP",
     entry_points={

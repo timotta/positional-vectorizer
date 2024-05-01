@@ -21,7 +21,6 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
         token_pattern=r"(?u)\b\w\w+\b",
         ngram_range=(1, 1),
         analyzer="word",
-        max_features=None,
         vocabulary=None,
     ):
         self.input = input
@@ -34,7 +33,6 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
         self.lowercase = lowercase
         self.token_pattern = token_pattern
         self.stop_words = stop_words
-        self.max_features = max_features
         self.ngram_range = ngram_range
         self.vocabulary = vocabulary
 
