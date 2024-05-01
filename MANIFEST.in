@@ -1,5 +1,6 @@
 include README.md
 include LICENSE
+include VERSION
 include requirements.txt
 recursive-include . positional_vectorizer/**
 prune tests

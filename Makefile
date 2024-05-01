@@ -16,3 +16,7 @@ lint:
 beautify:
 	black --exclude "(venv|notebooks)" .
 
+build:
+	pip install build
+	echo $(VERSION) > VERSION
+	python -m build -s
