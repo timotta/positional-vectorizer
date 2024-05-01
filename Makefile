@@ -18,5 +18,5 @@ beautify:
 
 build:
 	pip install build
-	echo $(VERSION) > VERSION
+	echo "$(VERSION)" > VERSION
 	python -m build -s
