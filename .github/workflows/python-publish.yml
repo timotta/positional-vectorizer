@@ -33,11 +33,6 @@ jobs:
       run: make lint
     - name: Test
       run: make test
-    - name: Get tag or commit id
-      id: version
-      uses: iawia002/get-tag-or-commit-id@v1
-      with:
-        length: 7
     - name: Build
       run: |
         pip install build
