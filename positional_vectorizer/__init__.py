@@ -1,7 +1,6 @@
 from sklearn.feature_extraction.text import _VectorizerMixin
 from sklearn.base import BaseEstimator
-from typing import Self
-import numpy as np
+from typing import Self, List
 from scipy.sparse._csr import csr_matrix
 import math
 
@@ -22,12 +21,8 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
         token_pattern=r"(?u)\b\w\w+\b",
         ngram_range=(1, 1),
         analyzer="word",
-        max_df=1.0,
-        min_df=1,
         max_features=None,
         vocabulary=None,
-        binary=False,
-        dtype=np.int64,
     ):
         self.input = input
         self.encoding = encoding
@@ -39,13 +34,9 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
         self.lowercase = lowercase
         self.token_pattern = token_pattern
         self.stop_words = stop_words
-        self.max_df = max_df
-        self.min_df = min_df
         self.max_features = max_features
         self.ngram_range = ngram_range
         self.vocabulary = vocabulary
-        self.binary = binary
-        self.dtype = dtype
 
     def fit(self, raw_documents, y=None) -> Self:
         self.vocabulary_ = self._build_vocabulary(raw_documents)
@@ -65,12 +56,13 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
             rankings = []
             avoid_duplicateds = set()
 
-            for position, feature in enumerate(analyze(doc)):
-                if feature in self.vocabulary_ and feature not in avoid_duplicateds:
-                    feature_idx = self.vocabulary_[feature]
-                    indexes.append(feature_idx)
-                    rankings.append(1 / (math.log(position + 1) + 1))
-                    avoid_duplicateds.add(feature)
+            for feature_list_for_gram in self._split_features_grams(analyze(doc)):
+                for rank, feature in enumerate(feature_list_for_gram):
+                    if feature in self.vocabulary_ and feature not in avoid_duplicateds:
+                        feature_idx = self.vocabulary_[feature]
+                        indexes.append(feature_idx)
+                        rankings.append(1 / (math.log(rank + 1) + 1))
+                        avoid_duplicateds.add(feature)
 
             j_indices.extend(indexes)
             values.extend(rankings)
@@ -82,6 +74,48 @@ class PositionalVectorizer(_VectorizerMixin, BaseEstimator):
         )
 
         return X
+
+    def _split_features_grams(self, feature_list: List[str]) -> List[List[str]]:
+        """Split a list of features into list of a list of features. Each list of features is a representation
+        of one of the n-grams range. We assume here that the features are ordered by the ngram representation
+        If scikit-learn change this behavior, the tests are going to fail and this method will need to be updated.
+
+        Parameters
+        ----------
+        feature_list: List[str]
+            List of features
+
+        Returns
+        -------
+        ngrams: List[List[str]]
+            A list of lists of features where each list of features is a representation of one of the n-grams kind
+
+        Examples
+        --------
+        >>> _split_features_grams(['xpto', 'blenga', 'xpto blenga'])
+        [['xpto', 'blenga'], ['xpto blenga']]
+        """
+
+        wich_gram = len if self.analyzer == "char" else self._wich_nram_by_space
+
+        last_gram = 0
+        result = []
+        actual_gram_result: List[str] = []
+
+        for feature in feature_list:
+            actual_gram = wich_gram(feature)
+            if actual_gram > last_gram:
+                last_gram = actual_gram
+                if actual_gram_result:
+                    result.append(actual_gram_result)
+                    actual_gram_result = []
+            actual_gram_result.append(feature)
+        if actual_gram_result:
+            result.append(actual_gram_result)
+        return result
+
+    def _wich_nram_by_space(self, feature: str) -> int:
+        return feature.count(" ") + 1
 
     def _build_vocabulary(self, raw_documents) -> dict:
         self._validate_ngram_range()
