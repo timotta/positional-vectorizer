@@ -38,10 +38,13 @@ jobs:
       uses: iawia002/get-tag-or-commit-id@v1
       with:
         length: 7
+    - name: Print version
+      id: output
+      run: echo "${{ steps.version.outputs.id }}"
     - name: Build
       run: make build
       env:
-        VERSION: ${{ steps.version.outputs.tag_or_commit_id }}
+        VERSION: ${{ steps.version.outputs.id }}
     - name: Publish package
       uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
       with:
