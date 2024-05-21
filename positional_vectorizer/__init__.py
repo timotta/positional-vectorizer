@@ -6,7 +6,7 @@ import math
 
 # Python 3.10 has no Self on typing module
 try:
-    from typing import Self
+    from typing import Self  # type: ignore[attr-defined]
 except Exception:
     from typing_extensions import Self
 
