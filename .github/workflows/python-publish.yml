@@ -10,8 +10,6 @@ name: Upload Python Package
 
 on:
   push:
-    tags:
-      - "*"
 
 permissions:
   contents: read
@@ -34,37 +32,3 @@ jobs:
       run: make lint
     - name: Test
       run: make test
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: quality
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: '3.11'
-    - name: Build
-      run: make build
-      env:
-        VERSION: ${{ steps.version.outputs.id }}
-    - name: Install
-      run: make install
-    - name: Get version
-      id: version
-      uses: iawia002/get-tag-or-commit-id@v1
-      with:
-        length: 7
-    - name: Print version
-      id: output
-      run: echo "${{ steps.version.outputs.id }}"
-    - name: Build
-      run: make build
-      env:
-        VERSION: ${{ steps.version.outputs.id }}
-    - name: Publish package
-      uses: pypa/gh-action-pypi-publish@27b31702a0e7fc50959f5ad993c78deac1bdfc29
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
-
