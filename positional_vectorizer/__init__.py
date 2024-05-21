@@ -1,8 +1,14 @@
 from sklearn.feature_extraction.text import _VectorizerMixin
 from sklearn.base import BaseEstimator
-from typing import Self, List
+from typing import List
 from scipy.sparse._csr import csr_matrix
 import math
+
+# Python 3.10 has no Self on typing module
+try:
+    from typing import Self  # type: ignore[attr-defined]
+except Exception:
+    from typing_extensions import Self
 
 
 class PositionalVectorizer(_VectorizerMixin, BaseEstimator):

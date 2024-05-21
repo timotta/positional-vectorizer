@@ -35,6 +35,6 @@ setuptools.setup(
             # '',
         ],
     },
-    python_requires=">=3.11, <3.12",
+    python_requires=">=3.10, <3.12",
     install_requires=requirements,
 )
